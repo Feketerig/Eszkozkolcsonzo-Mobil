@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import hu.bme.aut.android.eszkozkolcsonzo.R
 import java.util.*
 
@@ -28,7 +29,8 @@ import java.util.*
 @Composable
 fun DeviceDetail(
     id: Int,
-    viewModel: DeviceDetailViewModel = hiltViewModel()
+    viewModel: DeviceDetailViewModel = hiltViewModel(),
+    navController: NavHostController,
 ) {
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
@@ -44,12 +46,13 @@ fun DeviceDetail(
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
             when (event) {
-                is DeviceDetailViewModel.DetailEvent.Succes -> {
+                is DeviceDetailViewModel.DetailEvent.Success -> {
                     Toast.makeText(
                         context,
                         "Sikeres foglalás",
                         Toast.LENGTH_LONG
                     ).show()
+                    navController.popBackStack()
                 }
             }
         }

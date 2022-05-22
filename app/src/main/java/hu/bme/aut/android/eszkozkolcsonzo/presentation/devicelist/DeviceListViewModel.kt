@@ -6,10 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.android.eszkozkolcsonzo.MainViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.DeviceRepository
 import hu.bme.aut.android.eszkozkolcsonzo.util.Resource
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +25,17 @@ class DeviceListViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
+    private val validationEventChannel = Channel<ValidationEvent>()
+    val validationEvents = validationEventChannel.receiveAsFlow()
+
     init {
-        getDevices(true)
+        viewModelScope.launch {
+            if (MainViewModel.state.token == null) {
+                validationEventChannel.send(ValidationEvent.NotLoggedIn)
+                return@launch
+            }
+            getDevices(true)
+        }
     }
 
     fun getDevices(
@@ -61,5 +73,9 @@ class DeviceListViewModel @Inject constructor(
     fun onCheckedChange(newValue: Boolean){
         state = state.copy(onlyAvailable = newValue)
         getDevices(forceRefresh = true)
+    }
+
+    sealed class ValidationEvent {
+        object NotLoggedIn: ValidationEvent()
     }
 }

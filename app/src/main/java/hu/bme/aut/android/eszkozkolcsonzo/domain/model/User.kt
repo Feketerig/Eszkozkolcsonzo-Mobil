@@ -6,17 +6,18 @@ import kotlinx.serialization.Serializable
 data class User(
     val id: Int,
     val name: String,
+    val email: String,
     val phone: String,
     val address: String,
-    val email: String,
-    val privilege: Privilege
+    val password_hash: String,
+    val privilege: Privilege,
 ){
-    companion object {
-        const val path = "/users"
-    }
-
     @Serializable
     enum class Privilege{
-        Admin, User
+        Admin, Handler, User
+    }
+
+    companion object {
+        const val path = "/users"
     }
 }

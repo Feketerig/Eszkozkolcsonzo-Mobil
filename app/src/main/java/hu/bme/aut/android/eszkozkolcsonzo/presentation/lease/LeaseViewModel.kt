@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.MainViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.data.network.NetworkInterface
-import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Lease
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.DeviceRepository
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.ReservationRepository
 import kotlinx.coroutines.channels.Channel
@@ -44,12 +43,6 @@ class LeaseViewModel @Inject constructor(
                         isDevice = false
                     )
                 }
-                /*state = state.copy(
-                    device = Device(1, "Telefon", "Ez egy telefon", true),
-                    reservation = Reservation(1,1,61611580800000,61611667200000,1),
-                    reservationUser = User(1,"Fazekas Levente", "+36306172491", "Valahol", "levente.fazekas@gmail.com", User.Privilege.User),
-                    showCamera = false, isDevice = false
-                )*/
             }
             is LeaseEvent.FindUSer -> {
                 viewModelScope.launch {
@@ -60,14 +53,10 @@ class LeaseViewModel @Inject constructor(
                         isUser = false
                     )
                 }
-                /*state = state.copy(
-                    user = User(1,"Fazekas Levente", "+36306172491", "Valahol", "levente.fazekas@gmail.com", User.Privilege.User),
-                    showCamera = false, isUser = false
-                )*/
             }
             is LeaseEvent.StartLease ->{
                 viewModelScope.launch {
-                    network.addLease(lease = Lease(1,state.reservation!!, MainViewModel.state.user!!, state.user!!, true))
+                    network.addLease(reservationId = state.reservation!!.id, handlerUserId = MainViewModel.state.id!!, requesterUserId = state.user!!.id)
                     validationEventChannel.send(LeaseScreenEvent.LeaseSuccess)
                 }
             }

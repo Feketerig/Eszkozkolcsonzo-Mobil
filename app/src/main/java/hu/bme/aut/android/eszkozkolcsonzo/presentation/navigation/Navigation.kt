@@ -18,11 +18,13 @@ import hu.bme.aut.android.eszkozkolcsonzo.presentation.reservationsList.Reservat
 fun Navigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.DeviceListScreen.route
+        startDestination = Screen.LoginScreen.route+"/login"
     ){
         composable(route = Screen.DeviceListScreen.route){
             DeviceListScreen(
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
+                navController = navController,
+                target = Screen.LoginScreen.route
             )
         }
         composable(
@@ -35,7 +37,7 @@ fun Navigation(navController: NavHostController) {
             )
         ){
             it.arguments?.getInt("id")?.let { it1 ->
-                DeviceDetail(it1)
+                DeviceDetail(it1, navController = navController)
             }
         }
         composable(route = Screen.CameraScreen.route+"/lease"){
@@ -44,8 +46,11 @@ fun Navigation(navController: NavHostController) {
         composable(route = Screen.CameraScreen.route+"/drawback"){
             LeaseScreen(mode = "drawback", navController = navController)
         }
-        composable(route = Screen.LoginScreen.route){
-            LoginScreen(navController = navController, target = Screen.DeviceListScreen.route)
+        composable(route = Screen.LoginScreen.route+"/login"){
+            LoginScreen(navController = navController, target = Screen.DeviceListScreen.route, mode = "login")
+        }
+        composable(route = Screen.LoginScreen.route+"/logout"){
+            LoginScreen(navController = navController, target = Screen.DeviceListScreen.route, mode = "logout")
         }
         composable(route = Screen.ReservationListScreen.route){
             ReservationScreen(navController = navController, target = Screen.LoginScreen.route)

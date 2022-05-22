@@ -1,7 +1,6 @@
 package hu.bme.aut.android.eszkozkolcsonzo.data.repository
 
 import hu.bme.aut.android.eszkozkolcsonzo.data.network.NetworkInterface
-import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Reservation
 import hu.bme.aut.android.eszkozkolcsonzo.domain.model.ReservationInfo
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.ReservationRepository
 import hu.bme.aut.android.eszkozkolcsonzo.util.Resource
@@ -13,8 +12,8 @@ import javax.inject.Inject
 class ReservationRepositoryImpl @Inject constructor(
     private val network: NetworkInterface
     ) : ReservationRepository {
-    override suspend fun addReservation(reservation: Reservation) {
-        network.addReservation(reservation)
+    override suspend fun addReservation(deviceId: Int, startDate: Long, endDate: Long) {
+        network.addReservation(deviceId, startDate, endDate)
     }
 
     override suspend fun getReservations(userId: Int?): Flow<Resource<List<ReservationInfo>>> {

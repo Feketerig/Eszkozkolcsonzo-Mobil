@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import hu.bme.aut.android.eszkozkolcsonzo.MainViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.presentation.navigation.Screen
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
+    mode: String,
     navController: NavHostController,
     target: String
 ) {
@@ -64,7 +64,14 @@ fun LoginScreen(
         }
     }
 
-    if (MainViewModel.state.user == null) {
+    if (state.isLoading){
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }else if (mode == "login") {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -144,7 +151,7 @@ fun LoginScreen(
                 Text(text = "Belépés")
             }
         }
-    }else if(MainViewModel.state.user != null && !state.isLoading){
+    }else if(mode == "logout"){
         AlertDialog(
             onDismissRequest = { viewModel.onEvent(LoginEvent.CancelLogout) },
             title = {
@@ -170,12 +177,5 @@ fun LoginScreen(
                 }
             }
         )
-    }else if (state.isLoading){
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
     }
 }

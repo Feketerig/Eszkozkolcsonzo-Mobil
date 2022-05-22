@@ -190,20 +190,6 @@ fun RegistrationScreen(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = state.isAdmin,
-                onCheckedChange = {
-                    viewModel.onEvent(RegistrationEvent.IsAdminChanged(it))
-                }
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Admin")
-        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically

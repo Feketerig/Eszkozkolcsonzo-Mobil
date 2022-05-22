@@ -27,11 +27,11 @@ class ReservationViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            if (MainViewModel.state.user == null){
+            if (MainViewModel.state.token == null){
                 validationEventChannel.send(ValidationEvent.NotLoggedIn)
                 return@launch
             }
-            getReservations(MainViewModel.state.user?.id)
+            getReservations(MainViewModel.state.id)
         }
     }
 
@@ -58,7 +58,7 @@ class ReservationViewModel @Inject constructor(
     }
 
     fun isAdmin(): Boolean{
-        return MainViewModel.state.user?.privilege == User.Privilege.Admin
+        return MainViewModel.state.privilege == User.Privilege.Admin
     }
 
     sealed class ValidationEvent {

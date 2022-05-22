@@ -1,15 +1,14 @@
 package hu.bme.aut.android.eszkozkolcsonzo.data.network
 
 import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Device
-import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Lease
 import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Reservation
 import hu.bme.aut.android.eszkozkolcsonzo.domain.model.User
 
 interface NetworkInterface {
 
-    suspend fun login(email: String, password: String): User?
+    suspend fun login(email: String, password: String): String
 
-    suspend fun registration(user: User): User
+    suspend fun registration(email: String, name: String, phone: String, address: String, password: String)
 
     suspend fun getAllDevices(): List<Device>
 
@@ -25,7 +24,7 @@ interface NetworkInterface {
 
     suspend fun getLeaseIdByReservationId(id: Int): Int
 
-    suspend fun addLease(lease: Lease)
+    suspend fun addLease(reservationId: Int, handlerUserId: Int, requesterUserId: Int)
 
     //suspend fun deleteLease(id: Int)
 
@@ -41,13 +40,15 @@ interface NetworkInterface {
 
     //suspend fun getReservation(id: Int): Reservation
 
-    suspend fun addReservation(reservation: Reservation)
+    suspend fun addReservation(deviceId: Int, startDate: Long, endDate: Long)
 
     //suspend fun deleteReservation(id: Int)
 
     suspend fun getUserNameById(userId: Int): String
 
     suspend fun getUserById(userId: Int): User?
+
+    suspend fun getUserByEmail(email: String): User?
 
     companion object{
         //const val BASE_URL = "http://152.66.181.19:8080"

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.MainViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.data.network.NetworkInterface
@@ -95,17 +96,25 @@ class RegistrationViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                val user = network.registration(
-                    User(
-                        2,
-                        state.userName,
-                        state.phone,
-                        state.address,
-                        state.email,
-                        if (state.isAdmin) User.Privilege.Admin else User.Privilege.User
-                    )
+                network.registration(
+                    email = state.email,
+                    name = state.userName,
+                    phone = state.phone,
+                    address = state.address,
+                    password = state.password
                 )
-                MainViewModel.state = MainViewModel.state.copy(user = user)
+                val token = network.login(state.email, state.password)
+                val jwt = JWT(token)
+                val id = jwt.getClaim("id").asInt()
+                val name = jwt.getClaim("name").asString()
+                val email = jwt.getClaim("email").asString()
+                val privilege = when(jwt.getClaim("priv").asString()){
+                    "Admin" -> User.Privilege.Admin
+                    "User" -> User.Privilege.User
+                    "Handler" -> User.Privilege.Handler
+                    else -> User.Privilege.User
+                }
+                MainViewModel.state = MainViewModel.state.copy(id = id, name = name, email = email, privilege = privilege, token = token, password = state.password)
                 validationEventChannel.send(RegistrationValidationEvent.Success)
             }catch (e: Exception){
                 validationEventChannel.send(RegistrationValidationEvent.Failed)

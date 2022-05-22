@@ -99,7 +99,7 @@ fun Drawer(
             )
         )
     }
-    if (MainViewModel.state.user == null) {
+    if (MainViewModel.state.token == null) {
         items.addAll(
             listOf(
                 NavDrawerItem.Registration,
@@ -114,11 +114,11 @@ fun Drawer(
 
 
     Column {
-        if (MainViewModel.state.user != null) {
+        if (MainViewModel.state.token != null) {
             DropDown(
-                text = MainViewModel.state.user?.name ?: ""
+                text = MainViewModel.state.name ?: ""
             ) {
-                QRCodeView(str = QRCodeSchema.User + MainViewModel.state.user?.id.toString())
+                QRCodeView(str = QRCodeSchema.User + MainViewModel.state.id)
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

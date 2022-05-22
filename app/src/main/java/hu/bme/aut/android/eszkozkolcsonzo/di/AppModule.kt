@@ -34,11 +34,23 @@ object AppModule {
         return Network(
             HttpClient(Android) {
                 install(Logging) {
+                    logger = Logger.SIMPLE
                     level = LogLevel.ALL
                 }
                 install(JsonFeature) {
                     serializer = KotlinxSerializer()
                 }
+                /*install(Auth){
+                    bearer {
+                        loadTokens {
+                            getToken
+                            BearerTokens(
+                                accessToken = token,
+                                refreshToken = ""
+                            )
+                        }
+                    }
+                }*/
                 defaultRequest {
                     if (method != HttpMethod.Get) contentType(ContentType.Application.Json)
                     accept(ContentType.Application.Json)

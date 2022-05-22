@@ -11,5 +11,5 @@ import androidx.compose.ui.graphics.asImageBitmap
 fun QRCodeView(str: String) {
     val generator by remember { mutableStateOf(QRCodeGenerator()) }
     val bitmap by remember { mutableStateOf(generator.encodeAsBitmap(str)) }
-    Image(bitmap = bitmap!!.asImageBitmap(), contentDescription = "USer QR code")
+    Image(bitmap = bitmap!!.asImageBitmap(), contentDescription = "User QR code")
 }

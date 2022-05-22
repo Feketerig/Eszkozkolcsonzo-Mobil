@@ -1,5 +1,6 @@
 package hu.bme.aut.android.eszkozkolcsonzo.presentation.reservationsList
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -29,11 +31,16 @@ fun ReservationScreen(
     )
 
     val state = viewModel.state
-
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.validationEvents.collect { event ->
             when (event) {
                 is ReservationViewModel.ValidationEvent.NotLoggedIn -> {
+                    Toast.makeText(
+                        context,
+                        "Az foglalások megtekintéséhez be kell jelentkezned",
+                        Toast.LENGTH_LONG
+                    ).show()
                     navController.navigate(target)
                 }
             }
@@ -43,7 +50,7 @@ fun ReservationScreen(
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = {
-            viewModel.getReservations(MainViewModel.state.user?.id)
+            viewModel.getReservations(MainViewModel.state.id)
         }
     ) {
         LazyColumn(

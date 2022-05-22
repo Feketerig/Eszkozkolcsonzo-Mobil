@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.eszkozkolcsonzo.MainViewModel
-import hu.bme.aut.android.eszkozkolcsonzo.domain.model.Reservation
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.DeviceRepository
 import hu.bme.aut.android.eszkozkolcsonzo.domain.repository.ReservationRepository
 import kotlinx.coroutines.channels.Channel
@@ -57,21 +56,17 @@ class DeviceDetailViewModel @Inject constructor(
             state = state.copy(error = "A kezdődátum nem lehet előrébb a végdátumnál")
             return
         }
-        if (MainViewModel.state.user == null){
+        if (MainViewModel.state.token == null){
             state = state.copy(error = "Nem vagy bejelentkezve")
             return
         }
         viewModelScope.launch {
             reservationRepository.addReservation(
-                Reservation(
-                    1,
-                    savedStateHandle.get<Int>("id") ?: 0,
-                    state.startDate!!,
-                    state.endDate!!,
-                    userId = MainViewModel.state.user?.id!!
+                    deviceId = savedStateHandle.get<Int>("id") ?: 0,
+                    startDate = state.startDate!!,
+                    endDate = state.endDate!!,
                 )
-            )
-            validationEventChannel.send(DetailEvent.Succes)
+            validationEventChannel.send(DetailEvent.Success)
         }
     }
 
@@ -80,6 +75,6 @@ class DeviceDetailViewModel @Inject constructor(
     }
 
     sealed class DetailEvent{
-        object Succes: DetailEvent()
+        object Success: DetailEvent()
     }
 }
