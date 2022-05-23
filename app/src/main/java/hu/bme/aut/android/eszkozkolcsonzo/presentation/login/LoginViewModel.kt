@@ -54,6 +54,7 @@ class LoginViewModel @Inject constructor(
                     privilege = privilege,
                     token = token,
                 )
+                validationEventChannel.send(LoginScreenEvent.LoginSuccess)
             }
         }
     }

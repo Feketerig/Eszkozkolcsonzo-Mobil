@@ -18,13 +18,13 @@ import hu.bme.aut.android.eszkozkolcsonzo.presentation.reservationsList.Reservat
 fun Navigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.LoginScreen.route+"/login"
+        startDestination = Screen.DeviceListScreen.route
     ){
         composable(route = Screen.DeviceListScreen.route){
             DeviceListScreen(
                 onNavigate = navController::navigate,
                 navController = navController,
-                target = Screen.LoginScreen.route
+                target = Screen.LoginScreen.route+"/login"
             )
         }
         composable(
@@ -53,7 +53,7 @@ fun Navigation(navController: NavHostController) {
             LoginScreen(navController = navController, target = Screen.DeviceListScreen.route, mode = "logout")
         }
         composable(route = Screen.ReservationListScreen.route){
-            ReservationScreen(navController = navController, target = Screen.LoginScreen.route)
+            ReservationScreen(navController = navController, target = Screen.LoginScreen.route+"/login")
         }
         composable(route = Screen.RegistrationScreen.route){
             RegistrationScreen(navController = navController)
